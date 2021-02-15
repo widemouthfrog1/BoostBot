@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using System.Windows.Media;
+using System.Collections.Generic;
 using Bot.Utilities.Processed.BallPrediction;
 using Bot.Utilities.Processed.FieldInfo;
 using Bot.Utilities.Processed.Packet;
@@ -7,12 +8,27 @@ using RLBotDotNet;
 
 namespace Bot
 {
+
     // We want to our bot to derive from Bot, and then implement its abstract methods.
     class Bot : RLBotDotNet.Bot
     {
+        List<BoostPad> boostPads = new List<BoostPad>();
+
         // We want the constructor for our Bot to extend from RLBotDotNet.Bot, but we don't want to add anything to it.
         // You might want to add logging initialisation or other types of setup up here before the bot starts.
-        public Bot(string botName, int botTeam, int botIndex) : base(botName, botTeam, botIndex) { }
+        public Bot(string botName, int botTeam, int botIndex) : base(botName, botTeam, botIndex) {
+            FieldInfo fieldInfo = GetFieldInfo();
+            for (int i = 0; i < fieldInfo.BoostPads.Length; i++) {
+                
+                boostPads.Add(
+                    new BoostPad(
+                        new Vector(
+                            fieldInfo.BoostPads[i].Location.X, fieldInfo.BoostPads[i].Location.Y, fieldInfo.BoostPads[i].Location.Z), 
+                            fieldInfo.BoostPads[i].IsFullBoost ? 100 : 12
+                    )
+                );
+            }
+        }
 
         public override Controller GetOutput(rlbot.flat.GameTickPacket gameTickPacket)
         {
@@ -23,6 +39,7 @@ namespace Bot
             Vector3 ballLocation = packet.Ball.Physics.Location;
             Vector3 carLocation = packet.Players[index].Physics.Location;
             Orientation carRotation = packet.Players[index].Physics.Rotation;
+            
 
             // Find where the ball is relative to us.
             Vector3 ballRelativeLocation = Orientation.RelativeLocation(carLocation, ballLocation, carRotation);
