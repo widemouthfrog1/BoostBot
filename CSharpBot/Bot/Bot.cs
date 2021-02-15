@@ -35,6 +35,11 @@ namespace Bot
             // We process the gameTickPacket and convert it to our own internal data structure.
             Packet packet = new Packet(gameTickPacket);
 
+            for(int i = 0; i < packet.BoostPadStates.Length; i++)
+            {
+                boostPads[i].nextRespawn = packet.BoostPadStates[i].IsActive ? 0 : packet.BoostPadStates[i].Timer;
+            }
+
             // Get the data required to drive to the ball.
             Vector3 ballLocation = packet.Ball.Physics.Location;
             Vector3 carLocation = packet.Players[index].Physics.Location;
