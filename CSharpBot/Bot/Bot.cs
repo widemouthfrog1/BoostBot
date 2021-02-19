@@ -13,6 +13,9 @@ namespace Bot
     class Bot : RLBotDotNet.Bot
     {
         List<BoostPad> boostPads = new List<BoostPad>();
+        List<Car> teamMates = new List<Car>();
+        List<Car> opponents = new List<Car>();
+        Car myCar;
 
         // We want the constructor for our Bot to extend from RLBotDotNet.Bot, but we don't want to add anything to it.
         // You might want to add logging initialisation or other types of setup up here before the bot starts.
@@ -38,6 +41,23 @@ namespace Bot
             for(int i = 0; i < packet.BoostPadStates.Length; i++)
             {
                 boostPads[i].nextRespawn = packet.BoostPadStates[i].IsActive ? 0 : packet.BoostPadStates[i].Timer;
+            }
+
+            myCar = new Car(packet.Players[index]);
+            for(int i = 0; i < packet.Players.Length; i++)
+            {
+                if(i != index)
+                {
+                    Car next = new Car(packet.Players[i]);
+                    if (next.player.Team == myCar.player.Team)
+                    {
+                        teamMates.Add(next);
+                    }
+                    else
+                    {
+                        opponents.Add(next);
+                    }
+                }
             }
 
             // Get the data required to drive to the ball.

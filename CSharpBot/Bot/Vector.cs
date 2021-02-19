@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Numerics;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,6 +18,13 @@ namespace Bot
             this.x = x;
             this.y = y;
             this.z = z;
+        }
+
+        public Vector(Vector3 v)
+        {
+            x = v.X;
+            y = v.Y;
+            z = v.Z;
         }
     }
 }

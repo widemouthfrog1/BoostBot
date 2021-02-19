@@ -68,6 +68,7 @@
   <ItemGroup>
     <Compile Include="Bot.cs" />
     <Compile Include="BoostPad.cs" />
+    <Compile Include="Car.cs" />
     <Compile Include="Goal.cs" />
     <Compile Include="MapDimensions.cs" />
     <Compile Include="Program.cs" />
